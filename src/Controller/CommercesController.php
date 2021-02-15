@@ -36,6 +36,22 @@ class CommercesController extends AbstractController
     }
 
     /**
+     * @Route("/commerces/{id}", name="listOneCommerces" )
+     */
+    public function listeCommercesOne($id)
+    {
+
+        $Commerces = $this->getDoctrine()->getRepository(Commerce::class)->find($id);
+
+
+        return $this->render('commerces/listeCommercesOne.html.twig', [
+            'controller_name' => 'CommercesController',
+            'titre' => 'lite de tous les sites achéologiques de france',
+            'Commerce' => $Commerces
+        ]);
+    }
+
+    /**
      * @Route("/commerces/api/all", name="listAllCommercesJson" )
      */
     public function listeCommercesJson()
