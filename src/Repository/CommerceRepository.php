@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Data\SearchData;
 use App\Entity\Commerce;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -36,15 +37,16 @@ class CommerceRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Commerce
+
+    public function findSearch(SearchData $search): array
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $query = $this->CreateQueryBuilder('p')->select('c', 'p')->join('p.Codepostal', 'c');
+
+        if(!empty($search->codePostal)){
+            $query = $query->andWhere('c.id IN (:codePostal)' )->setParameter('codePostal', $search->codePostal);
+        }
+
+        return $query->getQuery()->getResult();
     }
-    */
+
 }

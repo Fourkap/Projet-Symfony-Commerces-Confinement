@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CommerceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -290,8 +292,35 @@ class Commerce
      */
     private $geo_point_2d;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Codepostal::class, inversedBy="commerces")
+     */
+    private $Codepostal;
+
+    public function __construct()
+    {
+        $this->Codepostal = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+
+    public function addCodepostal(Codepostal $codepostal): self
+    {
+        if (!$this->Codepostal->contains($codepostal)) {
+            $this->Codepostal[] = $codepostal;
+        }
+
+        return $this;
+    }
+
+    public function removeCodepostal(Codepostal $codepostal): self
+    {
+        $this->Codepostal->removeElement($codepostal);
+
+        return $this;
     }
 }

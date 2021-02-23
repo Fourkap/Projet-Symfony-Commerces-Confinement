@@ -5,13 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/pizza.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
 </head>
 <body>
-
-
 
 <div class='jumbotron'>
     <h1 class='text-center'>ma liste des Commerces</h1>
@@ -21,13 +19,28 @@
 <div class='container'>
 
     {% for list in listCommercesAll %}
-
-    {{ list.getNomDuCommerce() }}<br>
+        <div class="col-sm-4 col-md-4">
+        <div class="card border-dark mb-3" style="">
+            <div class="card-header bg-transparent border-success"><h3>{{ list.getNomDuCommerce() }}</h3></div>
+            <div class="card-body text-dark " >
+                <h5 class="card-title">
+                <p class="card-text">
+                    Adresse: {{ list.getCodePostal() }}, {{ list.getAdresse() }}<br>
+                    Services: {{ list.getServices() }}</p>
+                </h5>
+            </div>
+            <div class="card-footer bg-transparent border-dark">
+                <h5><a href="{{ list.getSiteInternet() }}">{{ list.getSiteInternet() }}</a></h5>
+            </div>
+        </div>
+        </div>
+    <br>
 
     {% endfor %}
 
 </div>
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 </body>
 </html>
