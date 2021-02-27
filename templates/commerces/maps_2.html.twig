@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link href="{{ asset('css/heroic-features.css') }}" rel="stylesheet" media="all">
+<link href="{{asset('css/maps.css')}}" rel="stylesheet" media="all">
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">Commerces</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive" >
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href='{{ path("listAllCommerces") }}'>Liste
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('maps')}}">Maps</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class='container'>
+
+    <!-- Jumbotron Header -->
+    <header class="jumbotron my-4">
+        <h1 class="display-3">Listes des commerces encore ouverts</h1>
+        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.</p>
+
+    </header>
+    <div class="row text-center  pb-5">
+        <div id="map" class="col-md-12" style="border-radius: 20px;"></div>
+    </div>
+<div>
+    <button>test</button>
+</div>
+
+</div>
+    <!-- Footer -->
+    <footer class="py-5 bg-dark mt-5t-5">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
+        </div>
+        <!-- /.container -->
+    </footer>
+</body>
+</html>
+
+
+
+
+
+
+
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+<script src="https://maps.google.com/maps/api/js?key=AIzaSyCS_DeN0pmFn0uwD4PPN3me89BpqDvMcV8" type="text/javascript"></script>
+
+<!-- Carte -->
+
+<script async type="text/javascript">
+    // On initialise la latitude et la longitude de Paris (centre de la carte)
+    var lat = 48.852969;
+    var lon = 2.349903;
+    var map = null;
+    // Fonction d'initialisation de la carte
+    function initMap() {
+        // Créer l'objet "map" et l'insèrer dans l'élément HTML qui a l'ID "map"
+        map = new google.maps.Map(document.getElementById("map"), {
+            // Nous plaçons le centre de la carte avec les coordonnées ci-dessus
+            center: new google.maps.LatLng(lat, lon),
+            // Nous définissons le zoom par défaut
+            zoom: 12,
+            // Nous définissons le type de carte (ici carte routière)
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            // Nous activons les options de contrôle de la carte (plan, satellite...)
+            mapTypeControl: true,
+            // Nous désactivons la roulette de souris
+            scrollwheel: false,
+            mapTypeControlOptions: {
+                // Cette option sert à définir comment les options se placent
+                style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR
+            },
+            // Activation des options de navigation dans la carte (zoom...)
+            navigationControl: true,
+            navigationControlOptions: {
+                // Comment ces options doivent-elles s'afficher
+                style: google.maps.NavigationControlStyle.ZOOM_PAN
+            }
+        });
+
+
+
+
+        // Déclaration de la infoWindow
+        var infoWindow = new google.maps.InfoWindow();
+
+
+        // boucle sur la liste reçue du controller listeFranceConvert()
+
+
+        // boucle sur le tableau reçu du controller listeFranceConvert()
+        {% for tab in tableau %}
+
+        // Déclaration des coordonnées
+        newPoint1 = new google.maps.LatLng({{ tab.2}}, {{ tab.1}});
+        console.log(newPoint1);
+
+        // Déclaration des paramètres récupérer du tableau
+        var commerce = "{{ tab.0.getNomDuCommerce }}";
+        var cp = "{{ tab.0.getCodePostal }}";
+        var adresse = "{{ tab.0.getAdresse }}";
+        var service = "{{ tab.0.getServices }}";
+
+        {#var description = "{{ tab.0.getDescription }}";#}
+        var typeCo = "{{ tab.0.getTypeDeCommerce }}";
+        var num = "{{ tab.0.id }}";
+            //alert(commerce);
+
+        // Création d'un marker
+        var marker = new google.maps.Marker({
+
+            position: newPoint1,
+            title: commerce,
+            map: map
+        });
+
+
+        // InfoWindow
+        (function (marker, commerce,  adresse, num,cp,service,typeCo, pointrecu) {
+            google.maps.event.addListener(marker, "click", function (e) {
+
+                //Contenu de l'infoWindow
+                infoWindow.setContent(
+                    "<div class='card-body'>"
+                    +"<h3 class='card-title'>"+commerce+"</h3>"
+                    +"<p class='card-text'>"
+                    +"Adresse: "+cp+", "+adresse
+                    +"<hr>"
+                    +"Services: "+service
+                    +"<hr>"
+                    +"Types de commerces: "+typeCo
+                    +"</div>"
+                    +"<div class='card-footer'>"
+                    +"<a href='{{ path("listOneCommerces", {id: tab.0.id })}}' class='btn btn-primary' >Détails</a>"
+                    +"</div>"
+
+                );
+
+                //ouveture de l'infoWindow avec paramètres : le nom de la carte et le marker
+                infoWindow.open(map, marker);
+
+
+            });
+            //Variables déclarées plus haut mis en paramètre
+        }) (marker, commerce,  adresse , num,cp,service,typeCo, newPoint1)
+
+        // Fin de la boucle For
+        {%  endfor %}
+
+
+    }
+    window.onload = function(){
+        // Fonction d'initialisation qui s'exécute lorsque le DOM est chargé
+        initMap();
+    };
+
+</script>
+
+
+<script>
+    $(document).ready(function(){
+
+       alert("jquery ok");
+       window.location="{{ path("toto") }}"
+
+    });
+</script>

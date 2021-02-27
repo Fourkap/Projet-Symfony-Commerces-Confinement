@@ -38,7 +38,7 @@ class CommerceRepository extends ServiceEntityRepository
     */
 
 
-    public function findSearch(SearchData $search): array
+    public function retourneCommerce(SearchData $search): array
     {
         $query = $this->CreateQueryBuilder('p')->select('c', 'p')->join('p.Codepostal', 'c');
 

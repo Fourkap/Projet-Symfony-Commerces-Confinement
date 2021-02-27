@@ -29,21 +29,24 @@ class CommercesController extends AbstractController
         $repo=$this->getDoctrine()->getRepository(Commerce::class);
         $listeCommercesAll= $repo->findAll();
 
-        return $this->render('commerces/listeCommercesAll.html.twig', [
+        return $this->render('commerces/listeCommercesAll_2.html.twig', [
             'controller_name' => 'CommercesController',
             'titre' => 'lite de tous les sites achéologiques de france',
             'listCommercesAll' => $listeCommercesAll,
         ]);
     }
 
+
     /**
-     * @Route("/commerces/find", name="listvalue" )
+     * @Route("/commerces/find", name="toto", methods={"GET"})
      */
-    public function listeCommercesbyvalue()
+    public function findCommerceTri()
     {
         $tableau2 = ['code_postal'=> '75003'];
+        $monArray = ['code_postal' => ["75003", "75002"], 'type_de_commerce' => 'Boulangerie - pâtisserie'];
         $repo=$this->getDoctrine()->getRepository(Commerce::class);
-        $listeCommercesAll2= $repo->findBy(array('code_postal' => "75003", 'type_de_commerce' => 'Boulangerie - pâtisserie'), array('id'=>'DESC'));
+        $listeCommercesAll2= $repo->findBy($monArray);
+        dd($listeCommercesAll2);
         $listeCommercesAll3 = $listeCommercesAll2;
 
         return $this->render('commerces/listeCommercesAll.html.twig', [
@@ -54,7 +57,7 @@ class CommercesController extends AbstractController
     }
 
     /**
-     * @Route("/commerces/{id}", name="listOneCommerces" )
+     * @Route("/commerces/{id}",requirements={"id"="\d+"}, name="listOneCommerces" )
      */
     public function listeCommercesOne($id)
     {
@@ -69,41 +72,11 @@ class CommercesController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/commerces/dina" )
-     */
-    public function Convert()
-    {
 
-        $repo=$this->getDoctrine()->getRepository(Commerce::class);
-        $listAllCommerce= $repo->findAll();
-        //$listAllFrance= $repo->findBy(array(),array('id'=>'DESC'),10, 0);
-
-        $tableaux = array();
-
-        foreach ($listAllCommerce as $commerce)
-        {
-            $tableau = array();
-            $tableau = $commerce->getGeoPoint2d();
-            $regex = "[.0-9]+(,)+";
-            $regexaprès = "(,)[.0-9]++";
-
-            $tableaux[] =  [$commerce, $tableau['lat'],$tableau['long']];
-        }
-        var_dump($tableaux);
-        dd($tableaux);
-//        return $this->render('france/maps.html.twig',  [
-//            'controller_name' => 'FranceController',
-//            'titre' => 'Liste de tous les sites de fouilles achéologiques de france',
-//            'listAllFrance' => $listAllFrance,
-//            'tableau' => $tableaux
-//
-//        ]);
-    }
 
 
     /**
-     * @Route("/test/test" )
+     * @Route("commerces/maps" , name="maps")
      */
     public function maps()
     {
@@ -125,7 +98,7 @@ class CommercesController extends AbstractController
             $tableaux[] =  [$commerce, $lat, $long] ;
         }
         //dd($tableaux);
-        return $this->render('commerces/maps.html.twig',  [
+        return $this->render('commerces/maps_2.html.twig',  [
             'controller_name' => 'CommercesController',
             'titre' => 'Liste de tous les commerces ouverts durant ',
             'listAllCommerces' => $listAllCommerce,

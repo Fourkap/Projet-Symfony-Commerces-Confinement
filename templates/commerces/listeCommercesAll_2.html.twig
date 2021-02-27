@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 
-    {#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>#}
-    {#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">#}
+{#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>#}
+{#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">#}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="{{ asset('css/heroic-features.css') }}" rel="stylesheet" media="all">
 </head>
@@ -41,31 +41,49 @@
     </div>
 </nav>
 
-<div class='container pt-5'>
+<div class='container'>
 
-    <div class="card text-center">
-        <div class="card-header">
+    <!-- Jumbotron Header -->
+    <header class="jumbotron my-4">
+        <h1 class="display-3">Listes des commerces encore ouverts</h1>
+        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.</p>
+
+    </header>
+    <div class="row text-center">
+    {% for list in listCommercesAll %}
+
+
+    <!-- Page Features -->
+
+        <div class="col-sm-4 col-md-4 pb-5" >
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="card-title">{{ list.getNomDuCommerce() }}</h3>
+                    <p class="card-text" >
+                        Adresse: {{ list.getCodePostal() }}, {{ list.getAdresse() }}<hr>
+                        Services: {{ list.getServices() }}<hr>
+                        Types de commerces: {{ list.getTypeDeCommerce() }}
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a href='{{ path("listOneCommerces", {id: list.id })}}' class="btn btn-primary" >Détails</a>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <h5 class="card-title">{{ Commerce.getNomDuCommerce() }}</h5>
-            <p class="card-text">{{ Commerce.getAdresse() }} {{ Commerce.getCodePostal() }}</p>
-            <p class="card-text">{{ Commerce.getTypeDeCommerce() }}</p>
-            <p class="card-text">Fabrique a Paris: {{ Commerce.getFabriqueAParis() }}</p>
-            <p class="card-text">{{ Commerce.getServices() }}</p>
-            <p class="card-text">{{ Commerce.getDescription() }}</p>
-            <p class="card-text">{{ Commerce.getPrecisions() }}</p>
-            <p class="card-text">{{ Commerce.getSiteInternet() }}</p>
-            <p class="card-text">{{ Commerce.getTelephone() }}</p>
-            <p class="card-text">{{ Commerce.getMail() }}</p>
-        </div>
-        <div class="card-footer text-muted">
-        </div>
+
+
+
+    {% endfor %}
     </div>
-</div>
-
-</div>
 </div><!-- /.container -->
 
+<!-- Footer -->
+<footer class="py-5 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
+    </div>
+    <!-- /.container -->
+</footer>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
