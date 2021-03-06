@@ -49,18 +49,18 @@
     <div class="row text-center  pb-5">
         <div id="map" class="col-md-12" style="border-radius: 20px;"></div>
     </div>
-<div>
-    <button>test</button>
+    <div>
+        <button>test</button>
+    </div>
+    <div id="streetView"></div>
 </div>
-
-</div>
-    <!-- Footer -->
-    <footer class="py-5 bg-dark mt-5t-5">
-        <div class="container">
-            <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
-        </div>
-        <!-- /.container -->
-    </footer>
+<!-- Footer -->
+<footer class="py-5 bg-dark mt-5t-5">
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
+    </div>
+    <!-- /.container -->
+</footer>
 </body>
 </html>
 
@@ -109,45 +109,46 @@
 
 
 
+        //function appellée pour afficher la viewstreet à partir de coordonnées
+        function streetView(myPointStreet){
+            var panorama = new google.maps.StreetViewPanorama(
+                document.getElementById('streetView'), {
+                    position: myPointStreet,
+                    pov: {
+                        heading: 34,
+                        pitch: 10
+                    }
+                });
+            map.setStreetView(panorama);
+        }
+
 
         // Déclaration de la infoWindow
         var infoWindow = new google.maps.InfoWindow();
-
-
         // boucle sur la liste reçue du controller listeFranceConvert()
-
-
         // boucle sur le tableau reçu du controller listeFranceConvert()
         {% for tab in tableau %}
-
         // Déclaration des coordonnées
         newPoint1 = new google.maps.LatLng({{ tab.2}}, {{ tab.1}});
         console.log(newPoint1);
-
         // Déclaration des paramètres récupérer du tableau
         var commerce = "{{ tab.0.getNomDuCommerce }}";
         var cp = "{{ tab.0.getCodePostal }}";
         var adresse = "{{ tab.0.getAdresse }}";
         var service = "{{ tab.0.getServices }}";
-
         {#var description = "{{ tab.0.getDescription }}";#}
         var typeCo = "{{ tab.0.getTypeDeCommerce }}";
         var num = "{{ tab.0.id }}";
-            //alert(commerce);
-
+        //alert(commerce);
         // Création d'un marker
         var marker = new google.maps.Marker({
-
             position: newPoint1,
             title: commerce,
             map: map
         });
-
-
         // InfoWindow
         (function (marker, commerce,  adresse, num,cp,service,typeCo, pointrecu) {
             google.maps.event.addListener(marker, "click", function (e) {
-
                 //Contenu de l'infoWindow
                 infoWindow.setContent(
                     "<div class='card-body'>"
@@ -162,35 +163,21 @@
                     +"<div class='card-footer'>"
                     +"<a href='{{ path("listOneCommerces", {id: tab.0.id })}}' class='btn btn-primary' >Détails</a>"
                     +"</div>"
-
                 );
+
+                streetView(pointrecu);
+
 
                 //ouveture de l'infoWindow avec paramètres : le nom de la carte et le marker
                 infoWindow.open(map, marker);
-
-
             });
             //Variables déclarées plus haut mis en paramètre
         }) (marker, commerce,  adresse , num,cp,service,typeCo, newPoint1)
-
         // Fin de la boucle For
         {%  endfor %}
-
-
     }
     window.onload = function(){
         // Fonction d'initialisation qui s'exécute lorsque le DOM est chargé
         initMap();
     };
-
-</script>
-
-
-<script>
-    $(document).ready(function(){
-
-       alert("jquery ok");
-       window.location="{{ path("toto") }}"
-
-    });
 </script>
