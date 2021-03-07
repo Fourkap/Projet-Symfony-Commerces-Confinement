@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link href="{{ asset('css/heroic-features.css') }}" rel="stylesheet" media="all">
 <link href="{{asset('css/maps.css')}}" rel="stylesheet" media="all">
+<script src="{{asset('js/markerclusterer.js')}}" type="text/javascript"></script>
 
 </head>
 
@@ -47,12 +48,15 @@
 
     </header>
     <div class="row text-center  pb-5">
-        <div id="map" class="col-md-12" style="border-radius: 20px;"></div>
+        <div id="streetView" >
+            <h5>Veuillez cliquez sur un marker pour afficher la streetView</h5>
+        </div>
+        <div id="map" class="col-md-8" ></div>
     </div>
     <div>
         <button>test</button>
     </div>
-    <div id="streetView"></div>
+
 </div>
 <!-- Footer -->
 <footer class="py-5 bg-dark mt-5t-5">
@@ -79,7 +83,7 @@
 <script async type="text/javascript">
     // On initialise la latitude et la longitude de Paris (centre de la carte)
     var lat = 48.852969;
-    var lon = 2.349903;
+    var lon = 2.349903
     var map = null;
     // Fonction d'initialisation de la carte
     function initMap() {
@@ -123,6 +127,9 @@
         }
 
 
+        var markers = [];
+
+
         // Déclaration de la infoWindow
         var infoWindow = new google.maps.InfoWindow();
         // boucle sur la liste reçue du controller listeFranceConvert()
@@ -146,6 +153,9 @@
             title: commerce,
             map: map
         });
+        // enregistrement dans le tableau des markers
+        markers.push(marker);
+
         // InfoWindow
         (function (marker, commerce,  adresse, num,cp,service,typeCo, pointrecu) {
             google.maps.event.addListener(marker, "click", function (e) {
@@ -175,6 +185,12 @@
         }) (marker, commerce,  adresse , num,cp,service,typeCo, newPoint1)
         // Fin de la boucle For
         {%  endfor %}
+
+
+        var markerCluster = new MarkerClusterer(map, markers, {
+            imagePath:
+                "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m"
+        });
     }
     window.onload = function(){
         // Fonction d'initialisation qui s'exécute lorsque le DOM est chargé
