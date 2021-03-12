@@ -53,20 +53,47 @@ class CommercesController extends AbstractController
      */
     public function findCommerceTri(Request $request)
     {
-
-
-
         $codepostal = explode (  "," , $request->get("codepostal"));
         $type = explode (  "," , $request->get("type"));
+        $service = explode(",", $request->get("service"));
 
-        $monArray = ['code_postal' => $codepostal, 'type_de_commerce' => $type];
+        $codepostalsql = $request->get("codepostal");
+        $typesql = $request->get("type");
+        $servicesql = $request->get("service");
+
+        $var = [$codepostalsql, $typesql, $servicesql];
+        $monArray = [];
+
+        switch ($var){
+            case ($var[0] == "" && $var[1] == "" && $var[2] == ""):
+                $this->redirectToRoute('maps');
+                break;
+            case($var[1] == "" && $var[2] == ""):   $monArray = ['code_postal' => $codepostal];
+            break;
+            case ($var[0] == "" && $var[2] == ""): $monArray = ['type_de_commerce' => $type];
+            break;
+            case ($var[0] == "" && $var[1] == ""): $monArray = ['services' => $service];
+            break;
+            case ($var[0] == ""): $monArray = ['type_de_commerce' => $type, 'services' => $service];
+            break;
+            case ($var[1] == ""): $monArray = ['code_postal' => $codepostal ,'services' => $service];
+            break;
+            case ($var[2] == ""): $monArray =  ['code_postal' => $codepostal, 'type_de_commerce' => $type];
+            break;
+            default: $monArray = ['code_postal' => $codepostal, 'type_de_commerce' => $type, 'services' => $service];
+            break;
+        }
 
 
 
-            $repo=$this->getDoctrine()->getRepository(Commerce::class);
+        $repo=$this->getDoctrine()->getRepository(Commerce::class);
         $listeCommercesAll= $repo->findBy($monArray);
 
 
+        if (array_filter($listeCommercesAll) == [])
+        {
+            $this->redirectToRoute('maps');
+        }
         foreach ($listeCommercesAll as $commerce)
         {
             $tableau = array();
