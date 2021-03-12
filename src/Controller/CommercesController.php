@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Codepostal;
 use App\Entity\Commerce;
+use Container1o2nEjQ\PaginatorInterface_82dac15;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,37 +24,63 @@ class CommercesController extends AbstractController
     }
 
     /**
-     * @Route("/commerces/all", name="listAllCommerces" )
+     * @Route("/commerces/all", name="listeCommerces" )
+     * @param Request $request
+     * @param PaginatorInterface $paginator
+     * @return Response
      */
-    public function listeCommercesAll(Request $request)
+    public function listeCommercesAll(Request $request,PaginatorInterface $paginator )
     {
         $repo=$this->getDoctrine()->getRepository(Commerce::class);
-        $listeCommercesAll= $repo->findAll();
+        $liste= $repo->findAll();
+
+        $listeCommercesAll = $paginator->paginate(
+            $liste,
+            $request->query->getInt('page', 1), //numero de la page en cours defaut 1
+            15
+        );
 
         return $this->render('commerces/listeCommercesAll_2.html.twig', [
             'controller_name' => 'CommercesController',
-            'titre' => 'lite de tous les sites achéologiques de france',
-            'listCommercesAll' => $listeCommercesAll,
+            'titre' => '',
+            'listeCommercesAll' => $listeCommercesAll,
         ]);
     }
 
 
     /**
-     * @Route("/commerces/find", name="toto", methods={"GET"})
+     * @Route("/commerces/find", name="tri", methods={"GET"})
      */
-    public function findCommerceTri()
+    public function findCommerceTri(Request $request)
     {
-        $tableau2 = ['code_postal'=> '75003'];
-        $monArray = ['code_postal' => ["75003", "75002"], 'type_de_commerce' => 'Boulangerie - pâtisserie'];
-        $repo=$this->getDoctrine()->getRepository(Commerce::class);
-        $listeCommercesAll2= $repo->findBy($monArray);
-        dd($listeCommercesAll2);
-        $listeCommercesAll3 = $listeCommercesAll2;
 
-        return $this->render('commerces/listeCommercesAll.html.twig', [
+
+
+        $codepostal = explode (  "," , $request->get("codepostal"));
+        $type = explode (  "," , $request->get("type"));
+
+        $monArray = ['code_postal' => $codepostal, 'type_de_commerce' => $type];
+
+
+
+            $repo=$this->getDoctrine()->getRepository(Commerce::class);
+        $listeCommercesAll= $repo->findBy($monArray);
+
+
+        foreach ($listeCommercesAll as $commerce)
+        {
+            $tableau = array();
+            $tableau = $commerce->getGeoPoint2d();
+            $regex = "/[.0-9]+(,)+/";
+            $regexapres = "/(,)[.0-9]++/";
+
+            $lat = preg_replace($regex, "", $tableau);
+            $long = preg_replace($regexapres, "",  $tableau);
+            $tableaux[] =  [$commerce, $lat, $long] ;
+        }
+        return $this->render('commerces/maps_2.html.twig', [
             'controller_name' => 'CommercesController',
-            'titre' => 'lite de tous les sites achéologiques de france',
-            'listCommercesAll' => $listeCommercesAll3
+            'tableau' => $tableaux
         ]);
     }
 
@@ -104,22 +132,6 @@ class CommercesController extends AbstractController
             'listAllCommerces' => $listAllCommerce,
             'tableau' => $tableaux
 
-        ]);
-    }
-
-    /**
-     * @Route("/codepostal/{id}", name="efdefeff" )
-     */
-    public function codepostal($id)
-    {
-
-        $Commerces = $this->getDoctrine()->getRepository(Codepostal::class)->find($id);
-
-        dd($Commerces);
-        return $this->render('commerces/listeCommercesOne.html.twig', [
-            'controller_name' => 'CommercesController',
-            'titre' => 'lite de tous les sites achéologiques de france',
-            'Commerce' => $Commerces
         ]);
     }
 

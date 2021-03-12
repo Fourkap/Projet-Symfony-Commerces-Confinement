@@ -23,7 +23,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive" >
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href='{{ path("listAllCommerces") }}'>Liste
+                    <a class="nav-link" href='{{ path("listeCommerces") }}'>Liste
                         <span class="sr-only">(current)</span>
                     </a>
                 </li>
@@ -50,7 +50,7 @@
 
     </header>
     <div class="row text-center">
-    {% for list in listCommercesAll %}
+    {% for list in listeCommercesAll %}
 
 
     <!-- Page Features -->
@@ -74,6 +74,10 @@
 
 
     {% endfor %}
+
+                {{ knp_pagination_render(listeCommercesAll) }}
+
+
     </div>
 </div><!-- /.container -->
 
