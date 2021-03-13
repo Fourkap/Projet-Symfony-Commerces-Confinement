@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html >
 <head>
-    <title>Tous les sites de fouilles archéologiques en France</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -18,7 +17,7 @@
 
 <div class='container'>
 
-    {% for list in listCommercesAll %}
+    {% for list in listAllCommerces %}
         <div class="col-sm-4 col-md-4">
         <div class="card border-dark mb-3" style="">
             <div class="card-header bg-transparent border-success"><h3>{{ list.getNomDuCommerce() }}</h3></div>

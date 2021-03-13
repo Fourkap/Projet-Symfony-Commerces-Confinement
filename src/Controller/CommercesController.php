@@ -42,7 +42,6 @@ class CommercesController extends AbstractController
 
         return $this->render('commerces/listeCommercesAll_2.html.twig', [
             'controller_name' => 'CommercesController',
-            'titre' => '',
             'listeCommercesAll' => $listeCommercesAll,
         ]);
     }
@@ -51,7 +50,7 @@ class CommercesController extends AbstractController
     /**
      * @Route("/commerces/find", name="tri", methods={"GET"})
      */
-    public function findCommerceTri(Request $request)
+    public function findCommerceTri(Request $request, PaginatorInterface $paginator)
     {
         $codepostal = explode (  "," , $request->get("codepostal"));
         $type = explode (  "," , $request->get("type"));
@@ -61,14 +60,41 @@ class CommercesController extends AbstractController
         $typesql = $request->get("type");
         $servicesql = $request->get("service");
 
-        $var = [$codepostalsql, $typesql, $servicesql];
-        $monArray = [];
+        $monArray = []; //findby
+
+        if ($codepostal != "") $monArray["code_postal" ] = $codepostal;
+        if ($type != "") $monArray["type_de_commerce"] = $type;
+        if ($service != "") $monArray["services"] = $service;
+
+        dd($monArray);
+
+//        $codepostalsql = ($codepostal == "") ? "*": $codepostalsql;
+//        $typesql = ($type == "") ? "*": $typesql;
+//        $servicesql = ($service == "") ? "*": $servicesql;
+
+
+
+//
+   $var = [$codepostalsql, $typesql, $servicesql];
+//
+//        $var1 = [$codepostal, $type, $service];
+//
+//        dd($var1);
+
+//
+//
+//        if ($codepostalsql != "") array_push($monArray, "code_postal" => $codepostal);
+//        if ($typesql != "") array_push($monArray, "type_de_commerce" => $type);
+//        if ($servicesql != "") array_push($monArray,"services" => $service);
+//
+//        dd($monArray);
+
 
         switch ($var){
             case ($var[0] == "" && $var[1] == "" && $var[2] == ""):
                 $this->redirectToRoute('maps');
                 break;
-            case($var[1] == "" && $var[2] == ""):   $monArray = ['code_postal' => $codepostal];
+            case($var[1] == "" && $var[2] == ""):   $monArray = ["code_postal" => $codepostal];
             break;
             case ($var[0] == "" && $var[2] == ""): $monArray = ['type_de_commerce' => $type];
             break;
@@ -83,7 +109,7 @@ class CommercesController extends AbstractController
             default: $monArray = ['code_postal' => $codepostal, 'type_de_commerce' => $type, 'services' => $service];
             break;
         }
-
+        dd($monArray);
 
 
         $repo=$this->getDoctrine()->getRepository(Commerce::class);
@@ -94,6 +120,12 @@ class CommercesController extends AbstractController
         {
             $this->redirectToRoute('maps');
         }
+
+        $listeCommercesAll = $paginator->paginate(
+            $listeCommercesAll,
+            $request->query->getInt('page', 1), //numero de la page en cours defaut 1
+            15
+        );
         foreach ($listeCommercesAll as $commerce)
         {
             $tableau = array();
@@ -107,6 +139,7 @@ class CommercesController extends AbstractController
         }
         return $this->render('commerces/maps_2.html.twig', [
             'controller_name' => 'CommercesController',
+            'listeCommercesAll' => $listeCommercesAll,
             'tableau' => $tableaux
         ]);
     }
@@ -122,7 +155,6 @@ class CommercesController extends AbstractController
 
         return $this->render('commerces/listeCommercesOne.html.twig', [
             'controller_name' => 'CommercesController',
-            'titre' => 'lite de tous les sites achéologiques de france',
             'Commerce' => $Commerces
         ]);
     }
@@ -133,7 +165,7 @@ class CommercesController extends AbstractController
     /**
      * @Route("commerces/maps" , name="maps")
      */
-    public function maps()
+    public function maps(Request $request,PaginatorInterface $paginator)
     {
 
         $repo=$this->getDoctrine()->getRepository(Commerce::class);
@@ -152,11 +184,16 @@ class CommercesController extends AbstractController
             $long = preg_replace($regexapres, "",  $tableau);
             $tableaux[] =  [$commerce, $lat, $long] ;
         }
+        $listeCommercesAll = $paginator->paginate(
+            $listAllCommerce,
+            $request->query->getInt('page', 1), //numero de la page en cours defaut 1
+            15
+        );
         //dd($tableaux);
         return $this->render('commerces/maps_2.html.twig',  [
             'controller_name' => 'CommercesController',
             'titre' => 'Liste de tous les commerces ouverts durant ',
-            'listAllCommerces' => $listAllCommerce,
+            'listeCommercesAll' => $listeCommercesAll,
             'tableau' => $tableaux
 
         ]);

@@ -407,7 +407,34 @@
         <div id="map" class="col-md-8" ></div>
     </div>
 
+    <div class="row text-center">
+        {% for list in listeCommercesAll %}
 
+
+            <!-- Page Features -->
+
+            <div class="col-sm-4 col-md-4 pb-5" >
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title">{{ list.getNomDuCommerce() }}</h3>
+                        <p class="card-text" >
+                            Adresse: {{ list.getCodePostal() }}, {{ list.getAdresse() }}<hr>
+                        Services: {{ list.getServices() }}<hr>
+                        Types de commerces: {{ list.getTypeDeCommerce() }}
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a href='{{ path("listOneCommerces", {id: list.id })}}' class="btn btn-primary" >Détails</a>
+                    </div>
+                </div>
+            </div>
+
+
+
+        {% endfor %}
+
+    </div>
+    {{ knp_pagination_render(listeCommercesAll) }}
 </div>
 <!-- Footer -->
 <footer class="py-5 bg-dark mt-5t-5">
@@ -548,6 +575,8 @@
         initMap();
     };
 </script>
+
+
 <script>
     $(document).ready(function(){
         alert("jquery ok");
